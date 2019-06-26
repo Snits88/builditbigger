@@ -7,6 +7,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.udacity.javalib.MyJokes;
+
+import java.util.List;
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+        List<String> jokes = MyJokes.getJokes();
+        Random rn = new Random();
+        int rnInt = rn.nextInt(jokes.size());
+        Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
     }
 
 

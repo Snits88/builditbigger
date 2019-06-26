@@ -19,4 +19,12 @@ allprojects {
         google()
         jcenter()
     }
+
+    ext {
+        // libraries version
+        commonlang = '3.9'
+        commoncollection = '4.3'
+    }
 }
+
+
