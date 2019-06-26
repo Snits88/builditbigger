@@ -20,11 +20,12 @@ allprojects {
         jcenter()
     }
 
-    ext {
-        // libraries version
-        commonlang = '3.9'
-        commoncollection = '4.3'
-    }
 }
 
 
+ext {
+    // libraries version
+    commonlang = '3.9'
+    commoncollection = '4.3'
+    supportlibrary = '26.1.0'
+}

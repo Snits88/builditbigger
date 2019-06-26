@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.udacity.javalib.MyJokes;
+import com.android.udacity.project.myandroidjokes.DiplayJokeActivity;
+import com.android.udacity.project.myandroidjokes.utils.BuildItBiggerCostants;
 
 import java.util.List;
 import java.util.Random;
@@ -49,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
         Random rn = new Random();
         int rnInt = rn.nextInt(jokes.size());
         Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
-    }
+        // Prepare Intent for use Android Library
+        Intent intent = new Intent(MainActivity.this, DiplayJokeActivity.class);
+        intent.putExtra(BuildItBiggerCostants.JOKE, jokes.get(rnInt));
+        startActivity(intent);
 
+    }
 
 }

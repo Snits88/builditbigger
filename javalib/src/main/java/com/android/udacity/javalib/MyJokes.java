@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MyJokes {
 
-    private static List<String> jokes = Arrays.asList("Jokes 01","Jokes 02","Jokes 03","Jokes 04");
+    private static List<String> jokes = Arrays.asList("Joke 01","Joke 02","Joke 03","Joke 04");
 
     private MyJokes(){};
 
