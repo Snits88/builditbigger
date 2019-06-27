@@ -50,6 +50,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
+    implementation "org.apache.commons:commons-lang3:$rootProject.commonlang"
     implementation project(":javalib")
     implementation project(":myandroidjokes")
 }

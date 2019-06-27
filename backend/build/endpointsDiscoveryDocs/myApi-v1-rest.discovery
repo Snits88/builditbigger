@@ -98,6 +98,9 @@
    "properties": {
     "data": {
      "type": "string"
+    },
+    "joke": {
+     "type": "string"
     }
    },
    "type": "object"

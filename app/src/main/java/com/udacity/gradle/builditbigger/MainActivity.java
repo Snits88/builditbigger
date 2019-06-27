@@ -1,8 +1,11 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +14,18 @@ import android.widget.Toast;
 import com.android.udacity.javalib.MyJokes;
 import com.android.udacity.project.myandroidjokes.DiplayJokeActivity;
 import com.android.udacity.project.myandroidjokes.utils.BuildItBiggerCostants;
+import com.udacity.gradle.builditbigger.tasks.EndpointsAsyncTask;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    AsyncTask<Pair<Context, String>, Void, String> asyncJoke;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +57,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        List<String> jokes = MyJokes.getJokes();
-        Random rn = new Random();
-        int rnInt = rn.nextInt(jokes.size());
-        Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
+        // Joke retriven from async call
+        asyncJoke = new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "TryBackend"));
+        String joke;
+        try {
+            joke = asyncJoke.get();
+        } catch (InterruptedException | ExecutionException e) {
+            joke = null;
+        }
         // Prepare Intent for use Android Library
         Intent intent = new Intent(MainActivity.this, DiplayJokeActivity.class);
-        intent.putExtra(BuildItBiggerCostants.JOKE, jokes.get(rnInt));
+
+        if(StringUtils.isEmpty(joke)) {
+            List<String> jokes = MyJokes.getJokes();
+            Random rn = new Random();
+            int rnInt = rn.nextInt(jokes.size());
+            Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
+            intent.putExtra(BuildItBiggerCostants.JOKE, jokes.get(rnInt));
+        }else{
+            intent.putExtra(BuildItBiggerCostants.JOKE, joke);
+        }
         startActivity(intent);
 
     }
