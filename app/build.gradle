@@ -26,6 +26,18 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions "basic"
+    productFlavors {
+        free {
+            applicationId "com.udacity.gradle.builditbigger.free"
+            dimension "basic"
+        }
+        paid {
+            applicationId "com.udacity.gradle.builditbigger.paid"
+            dimension "basic"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
