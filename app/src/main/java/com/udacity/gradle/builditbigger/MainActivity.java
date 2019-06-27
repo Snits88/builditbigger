@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
             Random rn = new Random();
             int rnInt = rn.nextInt(jokes.size());
             Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
-            intent.putExtra(BuildItBiggerCostants.JOKE, jokes.get(rnInt));
+            intent.putExtra(BuildItBiggerCostants.JOKE, "Dafault " + jokes.get(rnInt));
         }else{
-            intent.putExtra(BuildItBiggerCostants.JOKE, joke);
+            intent.putExtra(BuildItBiggerCostants.JOKE, "Endpoint " + joke);
         }
         startActivity(intent);
 
