@@ -11,9 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.udacity.javalib.MyJokes;
 import com.android.udacity.project.myandroidjokes.DiplayJokeActivity;
 import com.android.udacity.project.myandroidjokes.utils.BuildItBiggerCostants;
+import com.udacity.gradle.builditbigger.listener.OnEventListener;
 import com.udacity.gradle.builditbigger.tasks.EndpointsAsyncTask;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,9 +23,9 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnEventListener<String> {
 
-    AsyncTask<Pair<Context, String>, Void, String> asyncJoke;
+    private AsyncTask<Pair<Context, String>, Void, String> asyncJoke;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,27 +58,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         // Joke retriven from async call
-        asyncJoke = new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "TryBackend"));
-        String joke;
-        try {
-            joke = asyncJoke.get();
-        } catch (InterruptedException | ExecutionException e) {
-            joke = null;
-        }
-        // Prepare Intent for use Android Library
-        Intent intent = new Intent(MainActivity.this, DiplayJokeActivity.class);
-
-        if(StringUtils.isEmpty(joke)) {
-            List<String> jokes = MyJokes.getJokes();
-            Random rn = new Random();
-            int rnInt = rn.nextInt(jokes.size());
-            Toast.makeText(this, jokes.get(rnInt), Toast.LENGTH_SHORT).show();
-            intent.putExtra(BuildItBiggerCostants.JOKE, "Dafault " + jokes.get(rnInt));
-        }else{
-            intent.putExtra(BuildItBiggerCostants.JOKE, "Endpoint " + joke);
-        }
-        startActivity(intent);
-
+        asyncJoke = new EndpointsAsyncTask(this)
+                .execute(new Pair<Context, String>(this, "TryBackend"));
     }
 
+    @Override
+    public void onSuccess(String result) {
+        Toast.makeText(getApplicationContext(), "SUCCESS: "+result, Toast.LENGTH_LONG).show();
+        // Prepare Intent for use Android Library
+        Intent intent = new Intent(MainActivity.this, DiplayJokeActivity.class);
+        intent.putExtra(BuildItBiggerCostants.JOKE, "Endpoint " + result);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        // Prepare Intent for use Android Library
+        Intent intent = new Intent(MainActivity.this, DiplayJokeActivity.class);
+        intent.putExtra(BuildItBiggerCostants.JOKE, "Dafault Joke ");
+        startActivity(intent);
+    }
 }

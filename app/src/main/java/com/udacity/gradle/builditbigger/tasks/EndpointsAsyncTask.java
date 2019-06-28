@@ -9,12 +9,19 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+import com.udacity.gradle.builditbigger.listener.OnEventListener;
 
 import java.io.IOException;
 
 public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private static MyApi myApiService = null;
     private Context context;
+    private OnEventListener<String> mCallBack;
+    public Exception mException;
+
+    public EndpointsAsyncTask(OnEventListener listener){
+        mCallBack = listener;
+    }
 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
@@ -42,8 +49,19 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
         try {
             return myApiService.sayHi(name).execute().getJoke();
         } catch (IOException e) {
-            return null;
+            mException = e;
         }
+        return null;
     }
 
+    @Override
+    protected void onPostExecute(String result) {
+        if (mCallBack != null) {
+            if (mException == null) {
+                mCallBack.onSuccess(result);
+            } else {
+                mCallBack.onFailure(mException);
+            }
+        }
+    }
 }
